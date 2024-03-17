@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Battle Game</title>
+        <style>
+            canvas {
+                border: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="gameCanvas" width="1000" height="800"></canvas>
+        <canvas id="statusCanvas" width="1000" height="100"></canvas>
+        <script src="./player.js"></script>
+        <script>
+            const cellSize = 10;
+            const width = 100;
+            const height = 80;
+
+            // Player 1 grid and points
+            player1 = new Player();
+            player1.init(10, 5, "green", "yagr");
+
+            // Player 2 grid and points
+            player2 = new Player();
+            player2.init(10, 5, "blue", "jessie");
+
+            // Variable to track current player
+            let currentPlayer = player1;
+
+            function drawGrid(canvas, players) {
+                const ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < players.length; i++) {
+                    player = players[i];
+                    for (let row = 0; row < height; row++) {
+                        for (let col = 0; col < width; col++) {
+                            if (player.grid[row][col] === 1) {
+                                ctx.fillStyle = player.playerColor;
+                                ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                            }
+                        }
+                    }
+                }
+
+                ctx.fillStyle = currentPlayer.playerColor;
+                ctx.font = "16px Arial";
+                ctx.fillText(`${currentPlayer.name}'s Points: ${currentPlayer.points}`, 10, canvas.height - 10);
+            }
+
+            function handleCanvasClick(event, players) {
+                const rect = event.target.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
+
+                const clickedCol = Math.floor(mouseX / cellSize);
+                const clickedRow = Math.floor(mouseY / cellSize);
+
+                // Check if the current player has enough points and the clicked cell is dead
+                if (currentPlayer.points > 0 && currentPlayer.grid[clickedRow][clickedCol] === 0) {
+                    currentPlayer.grid[clickedRow][clickedCol] = 1;
+                    currentPlayer.points--;
+                }
+                // Update the display
+                drawGrid(event.target, players);
+            }
+
+            function initializeGrid(canvas, players) {
+                canvas.addEventListener("click", (event) => {
+                    handleCanvasClick(event, players);
+                });
+                for (let i = 0; i < players.length; i++) {
+                    player = players[i];
+                    // Add some initial alive cells
+                    for (let i = 0; i < player.initPoints; i++) {
+                        const randomRow = Math.floor(Math.random() * height);
+                        const randomCol = Math.floor(Math.random() * width);
+
+                        if (player.grid[randomRow][randomCol] === 0) {
+                            player.grid[randomRow][randomCol] = 1;
+                        }
+                    }
+                }
+            }
+
+            function handleCollisions(players, collisionEffect) {
+                const grid = Array.from({ length: height }, () => Array.from({ length: width }, () => 0));
+                // Populate the grid with player cells
+                for (const player of players) {
+                    for (let row = 0; row < height; row++) {
+                        for (let col = 0; col < width; col++) {
+                            if (player.grid[row][col] === 1) {
+                                grid[row][col]++;
+                            }
+                        }
+                    }
+                }
+                // Apply collision effect
+                for (let row = 0; row < height; row++) {
+                    for (let col = 0; col < width; col++) {
+                        if (grid[row][col] > 1) {
+                            collisionEffect(players, row, col);
+                        }
+                    }
+                }
+            }
+            function collisionEffect(players, row, col) {
+                for (const player of players) {
+                    if (player.grid[row][col] === 1) {
+                        // Remove the colliding cell for this player
+                        player.grid[row][col] = 0;
+                        // Optionally, you can apply additional effects here
+                    }
+                }
+            }
+
+            function switchPlayer(player1, player2) {
+                currentPlayer = currentPlayer.name === player1.name ? player2 : player1;
+                currentPlayer.newRound();
+            }
+
+            function next() {
+                // Players can change cell states here if needed
+                console.log(`${currentPlayer.name} can change cell states now`);
+
+                // Handle collisions
+                handleCollisions([player1, player2]);
+
+                // Redraw grids
+                drawGrid(gameCanvas, [player1, player2]);
+
+                // Switch player for the next round
+                switchPlayer(player1, player2);
+            }
+
+            function runGame() {
+                const gameCanvas = document.getElementById("gameCanvas");
+
+                initializeGrid(gameCanvas, [player1, player2]);
+                next();
+                // Set interval for allowing players to change cell states every 10 seconds
+                setInterval(() => {
+                    next();
+                }, 10000);
+            }
+
+            runGame();
+        </script>
+    </body>
+</html>
