@@ -37,6 +37,7 @@ function Player() {
             }
         }
         return {
+            'id': this.id,
             'status': this.status,
             'points': this.points,
             'updateMap': this.playerCacheMap,

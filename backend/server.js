@@ -53,7 +53,7 @@ function handleUpdate(serverInfo, data, data_type){
         }, serverInfo.players);
         serverInfo.gameData.mapData = calculatedResult.mapData;
 
-        console.log(calculatedResult.ended)
+        console.log(calculatedResult.game_status)
         return {
             'game_over': calculatedResult.game_status,
             'next_round': nextRound,

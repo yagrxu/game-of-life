@@ -111,6 +111,8 @@ function update(){
         console.log(err);
         console.log(data);
         if (data.game_over === true) {
+            gameData.initial = false;
+            newRound(data.map);
             gameData.gameStatus = GameStatus.GAME_OVER;
             render();
         }
@@ -132,7 +134,9 @@ function runGame(playerNumber) {
     initializeGrid(gameCanvas, gameData.players);
     next();
     setInterval(() => {
-        next();
+        if(gameData.gameStatus != GameStatus.GAME_OVER){
+            next();
+        }
     }, 5000);
 }
 

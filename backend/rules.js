@@ -147,6 +147,7 @@ function getNextGeneration(context, players) {
     for(var playerIndex = 0; playerIndex < players.length; playerIndex++){
         survivalMap[players[playerIndex].id] = 0;
     }
+    console.log(survivalMap);
     let nextGrid = Array.from({ length: context.height }, () => Array.from({ length: context.width }, () => 0));
     let mapData = context.mapData;
     for (let i = 0; i < context.height; i++) {
@@ -162,6 +163,7 @@ function getNextGeneration(context, players) {
         }
     }
     ended = false;
+    console.log(survivalMap);
     for(var playerIndex = 0; playerIndex < players.length; playerIndex++){
         if (survivalMap[players[playerIndex].id] == 0){
             ended = true;
@@ -203,13 +205,13 @@ function countNeighbors(mapData, x, y, width, height) {
             }
         }
     }
-    console.log(neighbors);
-    console.log(playerIds);
+    // console.log(neighbors);
+    // console.log(playerIds);
     reproduce = [];
     keep = [];
     for (let i = 0; i < playerIds.length; i ++){
         let playerId = playerIds[i];
-        console.log(neighbors[playerId]);
+        // console.log(neighbors[playerId]);
         if (neighbors[playerId] > 3) {
             console.log(x, y, {
                 "playerId": x + "-" + y,
@@ -224,9 +226,9 @@ function countNeighbors(mapData, x, y, width, height) {
             reproduce.push(playerId);
         }
     }
-    console.log(keep);
-    console.log(reproduce);
-    console.log(mapData[x][y])
+    // console.log(keep);
+    // console.log(reproduce);
+    // console.log(mapData[x][y])
     if(mapData[x][y] != 0 && (reproduce.length > 0 || keep.length > 0)) {
         if (reproduce.length >=2 || keep.length >= 2) {
             console.log(x, y, {
@@ -236,10 +238,10 @@ function countNeighbors(mapData, x, y, width, height) {
             return null;
         }
         else if(keep.length == 1 && keep[0] === mapData[x][y].id){
-            console.log({
-                "playerId": mapData[x][y].id,
-                "type": "survival"
-            });
+            // console.log({
+            //     "playerId": mapData[x][y].id,
+            //     "type": "survival"
+            // });
             return {
                 "height": x,
                 "width": y,
@@ -268,10 +270,10 @@ function countNeighbors(mapData, x, y, width, height) {
             "type": SELECTED_TILE_TYPE.VILLAGE
         }
     }
-    console.log({
-        "playerId": x + "-" + y,
-        "type": "unknown"
-    })
+    // console.log({
+    //     "playerId": x + "-" + y,
+    //     "type": "unknown"
+    // })
     return null;
 }
 
