@@ -107,7 +107,7 @@ function update(){
         data: {
             'players': playersData
         },
-    }, 'update', function(err, data){
+    }, 'api/update', function(err, data){
         console.log(err);
         console.log(data);
         if (data.game_over === true) {

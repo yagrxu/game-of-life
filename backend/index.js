@@ -15,10 +15,10 @@ app.listen(port, () => {
     console.log("Server Listening on PORT:", port);
 });
 
-app.get("/status", (request, response) => {
+app.get("/api/status", (request, response) => {
 
 });
 
-app.post("/update", (request, response) => {
+app.post("/api/update", (request, response) => {
     response.send(server.handleActions(request, serverInfo));
 });
