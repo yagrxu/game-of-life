@@ -14,6 +14,7 @@ function ServerInfo(){
         mapData: Array.from({ length: GameData.height }, () => Array(GameData.width).fill(0)),
         timeouts: []
     };
+    this.imageServerUrl = null;
     this.history = [];
     this.backup = async function(){};
 }
@@ -25,6 +26,7 @@ function handleActions(request, serverInfo){
         case Action.UPDATE.value:
             return handleUpdate(serverInfo, body.data, body.data_type)
         case Action.GET_DATA.value:
+            return serverInfo;
             break;
         case Action.NEW_ROUND.value:
             break;

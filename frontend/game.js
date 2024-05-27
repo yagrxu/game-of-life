@@ -145,9 +145,9 @@ function initPlayers(playerNumber) {
     for(var i = 0; i < playerNumber; i++) {
         let player = new Player();
         let v = new Image();
-        v.src = './images/village0' + (i+1) + '.png';
+        v.src = gameData.imageServerUrl + '/village0' + (i+1) + '.png';
         const c = new Image();
-        c.src = './images/cannon0' + (i+1) + '.png';
+        c.src = gameData.imageServerUrl + '/cannon0' + (i+1) + '.png';
         player.init('' + i, 10, 5, PlayerColor[i], PlayerName[i], v, c);
         gameData.playerById['' + i] = player;
         gameData.players.push(player);
@@ -155,5 +155,10 @@ function initPlayers(playerNumber) {
     gameData.currentPlayer = gameData.players[0];
 }
 
+getInitData('api/update', function(err, data){
+    if (err == null) {
+        gameData.imageServerUrl = data.imageServerUrl
+    }
+});
 
 render();

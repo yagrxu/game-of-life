@@ -10,7 +10,8 @@
   "dependencies": {
     "express": "",
     "enum": "",
-    "cors":""
+    "cors":"",
+    "@aws-sdk/client-ssm": ""
   },
   "author": "Yagr Xu",
   "license": "MIT"
